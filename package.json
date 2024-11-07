@@ -1,0 +1,16 @@
+{
+  "name": "app",
+  "private": true,
+  "scripts": {
+    "build": "node script/build.mjs",
+    "dev": "node script/dev.mjs",
+    "tsc": "tsc --project tsconfig.json --noEmit --watch --preserveWatchOutput"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.52.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0",
+    "typescript": "^5.6.3"
+  }
+}

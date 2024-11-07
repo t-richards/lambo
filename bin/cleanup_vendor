@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'find'
+require 'fileutils'
+require 'pathname'
+require 'yaml'
+
+# Heavily customized single-file version of cleanup_vendor
+module CleanupVendor
+  PATTERNS = YAML.safe_load(DATA.read, symbolize_names: true).freeze
+  MATCH_OPTS = (File::FNM_EXTGLOB | File::FNM_CASEFOLD | File::FNM_DOTMATCH).freeze
+
+  class Path < ::Pathname
+    def match?(patterns)
+      patterns.any? do |p|
+        p.start_with?('**') && fnmatch?(p, MATCH_OPTS) ||
+          basename.fnmatch?(p, MATCH_OPTS)
+      end
+    end
+  end
+
+  def self.run(dir)
+    raise ArgumentError, "Not a directory: '#{dir}'" unless File.directory?(dir.to_s)
+
+    files = PATTERNS[:files]
+    directories = PATTERNS[:directories]
+    exclude = PATTERNS[:exclude]
+
+    Find.find(dir) do |path|
+      path = Path.new(path)
+      next if path.match?(exclude)
+      next unless path.file? && path.match?(files) || path.directory? && path.match?(directories)
+
+      warn "Removing #{path}..."
+
+      FileUtils.remove_entry(path)
+    end
+  end
+end
+
+CleanupVendor.run('vendor/bundle/ruby/3.3.0/gems')
+
+__END__
+---
+exclude:
+  - "**/rack/test"
+directories:
+  - ".{git,github}"
+  - ".{npm,yarn}"
+  - ".circleci"
+  - ".config"
+  - ".idea"
+  - ".rvm"
+  - ".yardoc"
+  - "{doc,doclib,docs}"
+  - "{example,examples,sample,samples}"
+  - "{spec,test}"
+  - "bench"
+  - "contrib"
+  - "coverage"
+  - "gemfiles"
+  - "logs"
+  - "rakelib"
+  - "rdoc"
+files:
+  - ".{appveyor,codeclimate,hound,travis}.yml"
+  - ".{gitignore,gitkeep,gitmodules}"
+  - ".{rspec,rspec_status}"
+  - ".{ruby-gemset,ruby-version,rvm,yardopts}"
+  - ".autotest"
+  - ".byebug_history"
+  - ".dockerignore"
+  - ".document"
+  - ".DS_Store"
+  - ".gemtest"
+  - ".keep"
+  - ".npmignore"
+  - ".rubocop.yml"
+  - "{APACHE-LICENSE,BSDL,CHANGELOG,CHANGES,COPYING,LICENSE,LICENSE-DEPENDENCIES,MIT-LICENSE,NEWS,POSTGRES,README,TODO}"
+  - "{Gemfile,Gemfile.lock,Guardfile,Makefile,Rakefile}"
+  - "*.{bak,orig}"
+  - "*.{blurb,gcov,gem,gemspec}"
+  - "*.{c,cpp,h,hpp,java,log,markdown,md,mk,o,orig,rdoc,txt}"
+  - "*.{log,markdown,md,rdoc,txt}"
+  - "*.tar.gz"
+  - "appveyor.yml"
+  - "ChangeLog.cvs"
+  - "dependencies.yml"
+  - "design_rationale.rb"
+  - "Dockerfile"
+  - "gem_make.out"
+  - "LICENSE.SPECS"
+  - "package.json"
+  - "TAGS"
+  - "THANKS"

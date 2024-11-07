@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Lambo" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= stylesheet_link_tag :application %>
+    <%= stylesheet_link_tag :monaco %>
+
+    <%= tag.meta(name: 'monaco-worker-path', content: asset_path('vs/editor.worker.js')) %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>
