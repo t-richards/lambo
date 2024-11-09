@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
 # Core
-gem "rails", "~> 7.2.2"
-gem "puma", ">= 5.0"
+gem "rails", "~> 8.0"
+gem "puma", "~> 6.0"
 
 gem "bootsnap", require: false
 
