@@ -31,7 +31,6 @@ RUN cd vendor/bundle/ruby/3.4.0; \
 COPY . /app/
 RUN npm ci
 RUN bin/rails assets:precompile
-RUN ruby -e 'puts Gem.path;'
 RUN bin/cleanup_vendor
 RUN rm -f /app/bin/cleanup_vendor
 RUN rm -f /app/package.json /app/package-lock.json
