@@ -39,7 +39,7 @@ module CleanupVendor
   end
 end
 
-CleanupVendor.run('vendor/bundle/ruby/3.3.0/gems')
+CleanupVendor.run('vendor/bundle/ruby/3.4.0/gems')
 
 __END__
 ---

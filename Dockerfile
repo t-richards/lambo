@@ -1,5 +1,5 @@
 # Builder image
-FROM ruby:3.3.6-alpine AS builder
+FROM ruby:3.4.2-alpine AS builder
 
 ENV RAILS_ENV=production
 ENV BUNDLER_VERSION=2.5.22
@@ -11,7 +11,7 @@ ENV SECRET_KEY_BASE_DUMMY=1
 WORKDIR /app
 
 # System-level build dependencies
-RUN apk add --no-cache --update alpine-sdk npm sqlite-dev tzdata
+RUN apk add --no-cache --update alpine-sdk npm sqlite-dev tzdata yaml-dev
 RUN gem install bundler -v $BUNDLER_VERSION
 
 # App deps
@@ -20,7 +20,7 @@ RUN bundle config build.sqlite3 --enable-system-libraries
 RUN bundle install
 
 # Remove some things that cleanup_vendor doesn't get yet
-RUN cd vendor/bundle/ruby/3.3.0; \
+RUN cd vendor/bundle/ruby/3.4.0; \
   rm -rf cache; \
   rm -rf gems/*/ext; \
   rm -rf gems/lib/*/*.so; \
@@ -31,6 +31,7 @@ RUN cd vendor/bundle/ruby/3.3.0; \
 COPY . /app/
 RUN npm ci
 RUN bin/rails assets:precompile
+RUN ruby -e 'puts Gem.path;'
 RUN bin/cleanup_vendor
 RUN rm -f /app/bin/cleanup_vendor
 RUN rm -f /app/package.json /app/package-lock.json
@@ -41,7 +42,7 @@ RUN rm -rf /app/node_modules
 RUN rm -rf /app/vendor/assets
 
 # Runner image
-FROM ruby:3.3.6-alpine AS prod
+FROM ruby:3.4.2-alpine AS prod
 
 ENV RAILS_ENV=production
 ENV BUNDLER_VERSION=2.5.22
@@ -54,7 +55,7 @@ COPY --from=builder /app /app
 
 RUN set -eux; \
 # Runtime dependencies
-	apk add --no-cache --update curl ca-certificates jemalloc patchelf sqlite-libs tzdata; \
+	apk add --no-cache --update curl ca-certificates jemalloc patchelf sqlite-libs tzdata yaml; \
 # Patch ruby binary to use jemalloc without LD_PRELOAD
 	patchelf --add-needed libjemalloc.so.2 /usr/local/bin/ruby; \
 	apk del patchelf; \
