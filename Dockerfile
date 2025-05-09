@@ -2,7 +2,7 @@
 FROM ruby:3.4.2-alpine AS builder
 
 ENV RAILS_ENV=production
-ENV BUNDLER_VERSION=2.5.22
+ENV BUNDLER_VERSION=2.6.7
 ENV BUNDLE_DEPLOYMENT=true
 ENV BUNDLE_WITHOUT=development:test
 ENV BUNDLE_JOBS=3
@@ -44,7 +44,7 @@ RUN rm -rf /app/vendor/assets
 FROM ruby:3.4.2-alpine AS prod
 
 ENV RAILS_ENV=production
-ENV BUNDLER_VERSION=2.5.22
+ENV BUNDLER_VERSION=2.6.7
 ENV BUNDLE_WITHOUT=development:test
 ENV BUNDLE_PATH=vendor/bundle
 WORKDIR /app
