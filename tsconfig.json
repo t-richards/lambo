@@ -19,6 +19,9 @@
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
   },
+  "files": [
+    "app/javascript/global.d.ts"
+  ],
   "include": [
     "app/javascript/*.ts"
   ]

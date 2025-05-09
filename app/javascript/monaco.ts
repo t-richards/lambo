@@ -31,6 +31,9 @@ const startMonaco = () => {
         // TODO: report error somewhere
         return
     }
+    if (typeof window.MONACO_VERSION !== 'undefined') {
+        console.log('starting monaco editor, version:', window.MONACO_VERSION)
+    }
     monaco.editor.create(container, {
         value,
         language: 'sql',

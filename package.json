@@ -7,7 +7,7 @@
     "tsc": "tsc --project tsconfig.json --noEmit --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "monaco-editor": "^0.52.0"
+    "monaco-editor": "^0.52.2"
   },
   "devDependencies": {
     "esbuild": "^0.25.4",

@@ -1,5 +1,7 @@
 import * as esbuild from 'esbuild'
 
+import pkg from 'monaco-editor/package.json' with { type: 'json' }
+
 const workerEntryPoints = [
     // NOTE: Add extra worker entry points here if needed.
     // e.g., 'vs/language/json/json.worker.js'
@@ -20,6 +22,9 @@ esbuild.build({
     },
     assetNames: '[name]-[hash].digested',
     logLevel: 'info',
+    define: {
+        'window.MONACO_VERSION': JSON.stringify(pkg.version),
+    },
 })
 
 console.log('Building monaco files...')
