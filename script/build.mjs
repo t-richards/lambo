@@ -19,6 +19,7 @@ esbuild.build({
         '.ttf': 'file',
     },
     assetNames: '[name]-[hash].digested',
+    logLevel: 'info',
 })
 
 console.log('Building monaco files...')
@@ -30,4 +31,5 @@ esbuild.build({
     format: 'iife',
     outdir: 'app/assets/builds/vs',
     publicPath: '/assets',
+    logLevel: 'info',
 })
